@@ -1,0 +1,15 @@
+DefectClass:
+- Good
+- Surface
+ImageFormat:
+- 1.Area
+- 2.Length
+- 3.Width
+- 4.Device
+- 5.LotId
+- 7.ImageName
+IsDevice: 1
+Supplier:
+- Birch
+- KLA
+- CAMTEK

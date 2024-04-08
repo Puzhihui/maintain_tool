@@ -1,6 +1,6 @@
 # encoding:utf-8
 from flask import Flask, request
-from utils.globalvars import set_basic_config
+from util.globalvars import set_basic_config
 import logging.handlers
 import logging
 app = Flask(__name__)

@@ -12,7 +12,7 @@ import random
 import torch.nn as nn
 import torch.nn.functional as F
 from shutil import copy
-from models.vars import *
+from model.vars import *
 from datetime import datetime
 import matplotlib.pyplot as plt
 import numpy as np

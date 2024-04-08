@@ -1,6 +1,6 @@
 # encoding:utf-8
 import yaml
-from utils.globalvars import GlobalVars
+from util.globalvars import GlobalVars
 import os
 import shutil
 from pynvml import *
@@ -8,6 +8,8 @@ import requests
 import json
 from Crypto.Cipher import AES
 import base64
+import glob
+
 
 # 检查并读取配置文件
 def read_check_yaml(config_file):
@@ -154,3 +156,27 @@ def aes_decrypt(key, text):
     plaintext = cipher.decrypt(text)
     unpad = lambda s: s[0:-s[-1]]
     return unpad(plaintext).decode('utf8')
+
+
+def get_project_path(project_name=None):
+    """
+        获取当前项目根路径
+        :param project_name:
+        :return: 根路径
+    """
+    p_name = 'maintain_tool' if project_name is None else project_name
+    project_path = os.path.abspath(os.path.dirname(__file__))
+    # Windows
+    if project_path.find('\\') != -1: separator = '\\'
+    # Mac、Linux、Unix
+    if project_path.find('/') != -1: separator = '/'
+    root_path = project_path[:project_path.find(f'{p_name}{separator}') + len(f'{p_name}{separator}')]
+    return root_path
+
+
+image_extensions = [".jpg", ".jpeg", ".bmp", ".png"]
+def get_img_list(folder_path):
+    img_list = []
+    for extension in image_extensions:
+        img_list.extend(glob.glob(os.path.join(folder_path, "*{}".format(extension))))
+    return img_list

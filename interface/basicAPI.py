@@ -1,7 +1,7 @@
 # encoding:utf-8
 from flask import Blueprint, request
 import json
-from utils.tools import read_gpu_info
+from util.tools import read_gpu_info
 gpuinfo_api = Blueprint('gpuinfo_api', __name__)
 
 # gpuinfo

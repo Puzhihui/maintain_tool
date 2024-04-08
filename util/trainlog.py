@@ -1,8 +1,8 @@
 # encoding:utf-8
 import time
-from models.vars import *
+from model.vars import *
 import os
-from utils.globalvars import GlobalVars
+from util.globalvars import GlobalVars
 
 # 获取当前的log 文件名
 def get_current_log_info():

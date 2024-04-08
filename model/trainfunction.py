@@ -5,12 +5,12 @@ import os
 import pymssql
 import yaml
 
-from utils.tools import read_yaml, set_authority
-from models.tools import *
-from utils.trainlog import train_log_write
-from models.net.multitaskingmodel import MultitaskingModel
-from models.torchdataloader import *
-from models.vars import *
+from util.tools import read_yaml, set_authority
+from model.tools import *
+from util.trainlog import train_log_write
+from model.net.multitaskingmodel import MultitaskingModel
+from model.torchdataloader import *
+from model.vars import *
 
 import torch.nn as nn
 from torchvision import datasets, transforms

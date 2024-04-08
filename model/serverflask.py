@@ -6,9 +6,9 @@ import sys
 import requests.exceptions, requests
 from flask import Flask, request
 
-from models.serverfunction import *
-from utils.deploylog import deploy_log_write
-from models.vars import *
+from model.serverfunction import *
+from util.deploylog import deploy_log_write
+from model.vars import *
 
 info_lock = threading.Lock() # 锁住线程，避免客户多线程同时请求ADCserver 冲突
 app = Flask(__name__)

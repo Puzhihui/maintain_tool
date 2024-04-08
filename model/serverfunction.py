@@ -3,11 +3,11 @@ import csv
 
 import matplotlib.pyplot as plt
 
-from utils.tools import read_yaml
-from models.tools import *
-from utils.deploylog import deploy_log_write
-from models.net.multitaskingmodel import MultitaskingModel
-from models.torchdataloader import *
+from util.tools import read_yaml
+from model.tools import *
+from util.deploylog import deploy_log_write
+from model.net.multitaskingmodel import MultitaskingModel
+from model.torchdataloader import *
 
 import os
 import torch.nn as nn
@@ -16,7 +16,7 @@ import datetime
 import time
 import torch.nn.functional as F
 import gc
-from models.vars import *
+from model.vars import *
 
 
 # ---------------------初始化相关配置-----------------------#
