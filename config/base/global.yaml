@@ -10,6 +10,9 @@ ImageFormat:
 - 7.ImageName
 IsDevice: 1
 Supplier:
-- Birch
-- KLA
-- CAMTEK
+- Front_M6
+- Front_M6_val
+- FrontDark_M6
+- FrontDark_M6_val
+- Back_M6
+- Back_M6_val

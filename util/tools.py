@@ -91,11 +91,6 @@ def create_dataset_dir(supplier_list):
         os.mkdir(_temp_path)
     set_authority(dataset_path)
 
-    # 删除多余的机型路径
-    for f in os.listdir(dataset_path):
-        if f == "temp" or f in supplier_list:
-            continue
-        shutil.rmtree(os.path.join(dataset_path, f))
 
 # 创建临时目录下的类别目录
 def create_temp_class_dir(defect_classes):

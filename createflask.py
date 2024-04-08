@@ -31,7 +31,7 @@ def start_server(param):
     app.run(host=param['ip'], port=param['port'], debug=False, threaded=True)
 
 # 接口函数
-from interface.setAPI import imageformat_api, defectclass_api, datasetformat_api, supplier_api, dataset_path_api
+from interface.setAPI import imageformat_api, defectclass_api, datasetformat_api, supplier_api, dataset_path_api, move_temp_img_api
 from interface.basicAPI import gpuinfo_api
 from interface.modeltrainAPI import adc_train_state_api, adc_train_api, train_print_api, train_config_api
 from interface.modeldeployAPI import adc_server_api, adc_server_state_api, deploy_print_api, deploy_config_api
@@ -42,6 +42,7 @@ app.register_blueprint(defectclass_api)
 app.register_blueprint(datasetformat_api)
 app.register_blueprint(supplier_api)
 app.register_blueprint(dataset_path_api)
+app.register_blueprint(move_temp_img_api)
 
 # basic api
 app.register_blueprint(gpuinfo_api)

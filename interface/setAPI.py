@@ -11,12 +11,12 @@ from util.globalvars import GlobalVars
 from collections import defaultdict
 from config.load_config import dataset_cfg
 
+move_temp_img_api = Blueprint('move_temp_img_api', __name__)
 imageformat_api = Blueprint('imageformat_api', __name__)
 defectclass_api = Blueprint('defectclass_api', __name__)
 datasetformat_api = Blueprint('datasetformat_api', __name__)
 supplier_api = Blueprint('supplier_api', __name__)
 dataset_path_api = Blueprint('dataset_path_api', __name__)
-move_temp_img_api = Blueprint('move_temp_img_api', __name__)
 
 
 def temp_preprocess(img_list):
