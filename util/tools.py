@@ -6,7 +6,7 @@ import shutil
 from pynvml import *
 import requests
 import json
-from Crypto.Cipher import AES
+# from Crypto.Cipher import AES
 import base64
 import glob
 
@@ -143,19 +143,19 @@ def read_gpu_info():
     return gpu_info
 
 # 加密、解密工具
-def aes_encrypt(key, text):
-    cipher = AES.new(key.encode('utf8'), AES.MODE_ECB)
-    pad = lambda s: s+(AES.block_size - len(s) % AES.block_size) * chr(AES.block_size - len(s) % AES.block_size)
-    text = pad(text)
-    ciphertext = cipher.encrypt(text.encode('utf8'))
-    return base64.b64encode(ciphertext)
-
-def aes_decrypt(key, text):
-    cipher = AES.new(key.encode('utf8'), AES.MODE_ECB)
-    text = base64.b64decode(text)
-    plaintext = cipher.decrypt(text)
-    unpad = lambda s: s[0:-s[-1]]
-    return unpad(plaintext).decode('utf8')
+# def aes_encrypt(key, text):
+#     cipher = AES.new(key.encode('utf8'), AES.MODE_ECB)
+#     pad = lambda s: s+(AES.block_size - len(s) % AES.block_size) * chr(AES.block_size - len(s) % AES.block_size)
+#     text = pad(text)
+#     ciphertext = cipher.encrypt(text.encode('utf8'))
+#     return base64.b64encode(ciphertext)
+#
+# def aes_decrypt(key, text):
+#     cipher = AES.new(key.encode('utf8'), AES.MODE_ECB)
+#     text = base64.b64decode(text)
+#     plaintext = cipher.decrypt(text)
+#     unpad = lambda s: s[0:-s[-1]]
+#     return unpad(plaintext).decode('utf8')
 
 
 def get_project_path(project_name=None):

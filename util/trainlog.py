@@ -1,13 +1,14 @@
 # encoding:utf-8
 import time
-from model.vars import *
+# from model.vars import *
 import os
 from util.globalvars import GlobalVars
 
 # 获取当前的log 文件名
 def get_current_log_info():
   filename = time.strftime('%Y-%m-%d', time.localtime(time.time()))
-  train_log_path = TrainVars.get('logs_train_path') if TrainVars.get('logs_train_path') else GlobalVars.get('logs_train_path')
+  # train_log_path = TrainVars.get('logs_train_path') if TrainVars.get('logs_train_path') else GlobalVars.get('logs_train_path')
+  train_log_path = GlobalVars.get('logs_train_path')
   file_path = os.path.join(train_log_path, filename + ".txt")
   current_time = time.strftime('%Y-%m-%d %H:%M:%S: ', time.localtime(time.time()))
   return file_path, current_time

@@ -61,6 +61,8 @@ def move_temp_img():
         img_list = get_img_list(os.path.join(temp_path, "*"))
         for img in img_list:
             os.remove(img)
+    results = {"ErrorCode": 0, "Msg": "Success"}
+    return json.dumps(results)
 
 
 # image format

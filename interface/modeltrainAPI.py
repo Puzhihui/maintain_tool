@@ -7,7 +7,6 @@ from datetime import datetime
 from util.globalvars import GlobalVars
 from util.config import read_config_centent, write_config_centent
 import multiprocessing as mp
-from model.train import start_train, structure_input_train_config
 import time
 from util.trainlog import get_train_log_content, train_log_write
 from multiprocessing import freeze_support
@@ -15,7 +14,7 @@ from config.load_config import bat_cfg
 from util.run_script_tools import run_bat, check_process_status, kill_process
 freeze_support()  # 防止多开
 
-train_process = mp.Process(target=start_train)
+train_process = mp.Process(target=run_bat)
 
 adc_train_state_api = Blueprint('adc_train_state_api', __name__)
 adc_train_api = Blueprint('adc_train_api', __name__)
