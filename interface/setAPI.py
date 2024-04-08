@@ -37,7 +37,7 @@ def copy_imgs(img_list, save_path, is_remove=False):
             os.remove(img)
 
 
-@move_temp_img_api.route("/MoveTempImage", methods=['POST'])
+@move_temp_img_api.route("/AddToDataSet", methods=['POST'])
 def move_temp_img():
     if request.method == 'POST':
         temp_path = os.path.join(GlobalVars.get('datasets_path'), "temp")
