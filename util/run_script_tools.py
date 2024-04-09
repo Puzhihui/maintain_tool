@@ -2,9 +2,10 @@ import subprocess
 import psutil
 
 
-def run_bat(bat_path, create_console=False):
+def run_bat(bat_path, args=None, create_console=False):
     creationflags = subprocess.CREATE_NEW_CONSOLE if create_console else 0
-    process = subprocess.Popen(bat_path, creationflags=creationflags)
+    process_args = [bat_path] + args if args else [bat_path]
+    process = subprocess.Popen(process_args, creationflags=creationflags)
     return process
 
 
