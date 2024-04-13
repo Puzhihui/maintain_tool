@@ -52,7 +52,7 @@ def ADC_train():
         if request_param['Option'] == "start":
             bat_cfg.reload_yaml()  # 刷新配置
             train_args = bat_cfg.train_args
-            train_args = [bat_cfg.client, train_args["train_model"], train_args["epoch"], train_args["batch_size"]]
+            train_args = [bat_cfg.client, train_args["train_model"], train_args["epoch"], train_args["batch_size"], train_args["resume_checkpoint"]]
             train_process = run_bat(bat_cfg.train_bat_path, args=train_args, create_console=True)
             GlobalVars.set('train_state', True)
             train_log_write("train process start!")
