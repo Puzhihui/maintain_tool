@@ -1,12 +1,26 @@
 # 设置模型训练的参数，勿删勿修改格式
-# 1）训练Front或Back模型，输入Front或Back
-train_model: Back
+# 训练哪个模型。设置： 
+#    jssi：aoi、aoi_multi、photo、photo_multi
+#    M6、M24、M47: Front、Back
+train_model: Front
 
-# 2）训练轮数，建议20，新增模型时适量增大
-epoch: 16
+# 训练轮数，建议20，新增模型时适量增大
+epoch: 3
 
-# 3）是在以前的模型基础上训练，默认True，当新增类别时设置为False
-resume_checkpoint: True
+# 是在以前的模型基础上训练。设置：默认True，当新增类别时设置为False
+resume_checkpoint: False
 
-# 4）batch_size设置为16
-batch_size: 16
+# batch_size根据显卡显存设置，通常为8的倍数
+batch_size: 1
+
+# 学习率,设置：batchsize=16时设置为0.0008
+learning_rate: 0.0008
+
+# 是否上线本次训练后的模型.设置：True或False
+replace_online_model: True
+
+# 训练时，每隔多少个step打印一次日志
+log_interval: 10
+
+# 用于数据加载的工作进程数，设置：小于等于CPU核心数
+num_workers: 4

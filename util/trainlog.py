@@ -23,30 +23,28 @@ def train_log_write(message):
 
 # 获取某个起始时间到当前的log 内容
 def get_train_log_content(str_start_datetime):
-  # 转为时间戳
-  #str_start_datetime = "2022-10-5 11:10:10"
+  content = ""
   start_timestamp = int(time.mktime(time.strptime(str_start_datetime, "%Y-%m-%d %H:%M:%S")))
-
   file_path, current_time = get_current_log_info()
-  content = "file is locked"
   if not os.path.exists(file_path):
-    content = ""
     return content
+
   with open(file_path, "r", encoding="utf-8") as f:
+    print_info = f.readlines()
+
+  index = -1
+  for i, _print in enumerate(print_info):
     try:
-      content = ""
-      print_info = f.read().split("\n")
-      for _print in print_info:
-        try:
-          _str_print_date_time = _print.split(": ")[0]
-          _print_timestamp = int(time.mktime(time.strptime(_str_print_date_time, "%Y-%m-%d %H:%M:%S")))
-          if _print_timestamp > start_timestamp:
-            content += _print + "\n"
-        except:
-          pass
-    except IOError:
-      # file is locked
+      _str_print_date_time = _print.split(",")[0]
+      _print_timestamp = int(time.mktime(time.strptime(_str_print_date_time, "%Y-%m-%d %H:%M:%S")))
+      if _print_timestamp > start_timestamp:
+        index = i
+        break
+    except:
       pass
-  return content[:-1]
+  content = "".join(print_info[index:]) if index > -1 else ""
+  content = content.rstrip("\n")
+
+  return content
 
 

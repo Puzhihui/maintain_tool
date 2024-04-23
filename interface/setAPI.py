@@ -51,7 +51,7 @@ def move_temp_img():
             val_path = os.path.join(GlobalVars.get("datasets_path"), dataset["val"])
             for recipe, recipe_dict in supplier_dict .items():
                 for label, images in recipe_dict.items():
-                    if label not in list(dataset["categories"].keys()):
+                    if label not in list(dataset["categories_{}".format(dataset_cfg.client)].keys()):
                         continue
                     random.shuffle(images)
                     val_num = int(dataset_cfg.val_ratio * len(images))

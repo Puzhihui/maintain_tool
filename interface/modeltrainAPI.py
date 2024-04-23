@@ -52,13 +52,16 @@ def ADC_train():
         if request_param['Option'] == "start":
             bat_cfg.reload_yaml()  # 刷新配置
             train_args = bat_cfg.train_args
-            train_args = [bat_cfg.client, train_args["train_model"], train_args["epoch"], train_args["batch_size"], train_args["resume_checkpoint"]]
+            train_args = [bat_cfg.client,             train_args["train_model"],         train_args["epoch"],
+                          train_args["batch_size"],   train_args["resume_checkpoint"],   train_args["replace_online_model"],
+                          train_args["log_interval"], train_args["num_workers"]]
+            print(train_args)
             train_process = run_bat(bat_cfg.train_bat_path, args=train_args, create_console=True)
             GlobalVars.set('train_state', True)
             train_log_write("train process start!")
             results = {"ErrorCode": 0, "Msg": "Success", "Data": {"UpdateTime": str_time}}
         elif request_param['Option'] == "stop":
-            kill_process(train_process)
+            kill_process(train_process.pid)
             GlobalVars.set('train_state', False)
             train_log_write("train process exit!")
             results = {"ErrorCode": 0, "Msg": "Success", "Data": {"UpdateTime": str_time}}
@@ -70,7 +73,6 @@ def train_print():
     if request.method == 'POST':
         request_param = request.get_json()
         results = dict()
-        now = datetime.now();str_time = now.strftime("%Y-%m-%d %H:%M")
         if request_param['Option'] == "get":
             _start_time = request_param['Datetime']
             data = get_train_log_content(_start_time)
