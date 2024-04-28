@@ -9,7 +9,8 @@ import json
 from util.tools import read_yaml, write_yaml, create_dataset_dir, create_temp_class_dir, get_img_list
 from util.globalvars import GlobalVars
 from collections import defaultdict
-from config.load_config import dataset_cfg
+from config.load_config import dataset_cfg, bat_cfg
+from concurrent.futures import ThreadPoolExecutor
 
 move_temp_img_api = Blueprint('move_temp_img_api', __name__)
 imageformat_api = Blueprint('imageformat_api', __name__)
@@ -19,22 +20,49 @@ supplier_api = Blueprint('supplier_api', __name__)
 dataset_path_api = Blueprint('dataset_path_api', __name__)
 
 
-def temp_preprocess(img_list):
-    temp_dict = defaultdict(lambda: defaultdict(list))
+def get_dataset(client, recipe, supplier, img):
+    dataset, process = None, None
+    if client in ["jssi-Bumpping"]:
+        if recipe[:3] == "AEX":
+            process = "photo"
+        elif recipe[:3] == "AAI":
+            process = "aoi"
+        dataset = "{}_{}".format(client, process) if process else None
+    elif client in ["M6", "M24"]:
+        side = "Front" if "Front" in supplier else "Back"
+        field = "" if "Bright" in supplier else "Dark"
+        process = "{}{}".format(side, field)
+        dataset = "{}_{}".format(process, client)
+
+    return dataset
+
+
+def temp_preprocess(img_list, client):
+    temp_dict = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
     for img in img_list:
         label = img.split(os.sep)[-2]
-        recipe, img_name, supplier = img.split("@")[5], img.split("@")[9], img.split("@")[10]
-        temp_dict[supplier][recipe][label].append(img)
+        recipe, lot, BincodeOP, img_name, supplier = img.split("@")[5], img.split("@")[6], img.split("@")[3], img.split("@")[8], img.split("@")[9]
+        dataset = get_dataset(client, recipe, supplier, img)
+        if not dataset:
+            os.remove(img)
+            continue
+        _, extension = os.path.splitext(img)
+        save_img_name = "{}@{}@{}.{}".format(BincodeOP, lot, img_name, extension)
+        temp_dict[dataset][recipe][label].append({"img": img, "save_img_name": save_img_name})
 
     return temp_dict
 
 
-def copy_imgs(img_list, save_path, is_remove=False):
+def copy_imgs(img_list, save_path, num_threads=4):
     os.makedirs(save_path, exist_ok=True)
-    for img in img_list:
-        shutil.copy2(img, save_path)
-        if is_remove:
-            os.remove(img)
+
+    def copy_img(img_dict):
+        img = img_dict["img"]
+        save_img_name = img_dict["save_img_name"]
+        shutil.move(img, os.path.join(save_path, save_img_name))
+
+    with ThreadPoolExecutor(max_workers=num_threads) as executor:
+        executor.map(copy_img, img_list)
 
 
 @move_temp_img_api.route("/AddToDataSet", methods=['POST'])
@@ -42,25 +70,32 @@ def move_temp_img():
     if request.method == 'POST':
         temp_path = os.path.join(GlobalVars.get('datasets_path'), "temp")
         img_list = get_img_list(os.path.join(temp_path, "*"))
-        temp_dict = temp_preprocess(img_list)
-        for supplier, supplier_dict in temp_dict.items():
-            if supplier not in dataset_cfg.supplier2dataset:
-                continue
-            dataset = dataset_cfg.supplier2dataset[supplier]
-            train_path = os.path.join(GlobalVars.get("datasets_path"), dataset["train"])
-            val_path = os.path.join(GlobalVars.get("datasets_path"), dataset["val"])
-            for recipe, recipe_dict in supplier_dict .items():
-                for label, images in recipe_dict.items():
-                    if label not in list(dataset["categories_{}".format(dataset_cfg.client)].keys()):
+        temp_dict = temp_preprocess(img_list, bat_cfg.client)
+
+        def process_dataset(dataset, recipe_dict):
+            dataset_dict = dataset_cfg.dataset[dataset]
+            train_path = os.path.join(GlobalVars.get("datasets_path"), dataset_dict["train"])
+            val_path = os.path.join(GlobalVars.get("datasets_path"), dataset_dict["val"])
+            categories = list(dataset_dict["categories"].keys())
+
+            for recipe, label_dict in recipe_dict.items():
+                for label, images in label_dict.items():
+                    if label not in categories:
                         continue
                     random.shuffle(images)
                     val_num = int(dataset_cfg.val_ratio * len(images))
-                    copy_imgs(images[:val_num], os.path.join(val_path, recipe, label), is_remove=True)
-                    copy_imgs(images[val_num:], os.path.join(train_path, recipe, label), is_remove=True)
+
+                    copy_imgs(images[:val_num], os.path.join(val_path, recipe, label), num_threads=dataset_cfg.copy_threads)
+                    copy_imgs(images[val_num:], os.path.join(train_path, recipe, label), num_threads=dataset_cfg.copy_threads)
+
+        with ThreadPoolExecutor(max_workers=dataset_cfg.copy_threads) as executor:
+            for dataset, recipe_dict in temp_dict.items():
+                executor.submit(process_dataset, dataset, recipe_dict)
 
         img_list = get_img_list(os.path.join(temp_path, "*"))
-        for img in img_list:
-            os.remove(img)
+        with ThreadPoolExecutor(max_workers=dataset_cfg.copy_threads) as executor:
+            executor.map(os.remove, img_list)
+
     results = {"ErrorCode": 0, "Msg": "Success"}
     return json.dumps(results)
 

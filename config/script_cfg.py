@@ -69,25 +69,32 @@ class bat_config:
 class dataset_config():
     def __init__(self, client, val_ratio=0.1):
         self.client = client
+        self.copy_threads = 20  # 复制图片线程数
         assert client in client_list
-        self.supplier2dataset = {
-            "FrontSide_Bright": {"train": "Front_{}".format(client), "val": "Front_{}_val".format(client),
-                                 "categories_M6":  {'PADC': "0", 'PAOH': "1", 'PASC': "2", "FALSE": "3", 'PASD': "4", 'SINR': "5", "PASP": "6", "PANS": "7"},
-                                 "categories_M24": {'PADC': "0", 'PAOH': "1", 'PASC': "2", "FALSE": "3"},
-                                 },
-            "FrontSide_Dark":   {"train": "FrontDark_{}".format(client), "val": "FrontDark_{}_val".format(client),
-                                 "categories_M6":  {'PADC': "0", 'PAOH': "1", 'PASC': "2", "FALSE": "3", 'PASD': "4", 'SINR': "5", "PASP": "6", "PANS": "7"},
-                                 "categories_M24": {'PADC': "0", 'PAOH': "1", 'PASC': "2", "FALSE": "3"},
-                                 },
-            "BackSide_Bright":  {"train": "Back_{}".format(client), "val": "Back_{}_val".format(client),
-                                 "categories_M6":  {'BSDC': "0", 'BSNS': "1", 'SCRATCH': "2", "FALSE": "3", 'BSCS': "4", "BSCSS": "5"},
-                                 "categories_M24": {'BSDC': "0", 'BSOH': "1", 'SCRATCH': "2", "FALSE": "3"},
-                                 },
-            "BackSide_Dark":    {"train": "BackDark_{}".format(client), "val": "BackDark_{}_val".format(client),
-                                 "categories_M6":  {'BSDC': "0", 'BSNS': "1", 'SCRATCH': "2", "FALSE": "3", 'BSCS': "4", "BSCSS": "5"},
-                                 "categories_M24": {'BSDC': "0", 'BSOH': "1", 'SCRATCH': "2", "FALSE": "3"},
-                                 },
-
-            "jssi_Bumpping_aoi": {"train": "jssi-Bumping"}}
+        self.dataset = {
+            # M6
+            "Back_M6":      {"train": "Back_M6",         "val": "Back_M6_val",
+                             "categories": {'BSDC': "0", 'BSNS': "1", 'SCRATCH': "2", "FALSE": "3", 'BSCS': "4", "BSCSS": "5"}},
+            "BackDark_M6":  {"train": "BackDark_M6", "val": "BackDark_M6_val",
+                             "categories": {'BSDC': "0", 'BSNS': "1", 'SCRATCH': "2", "FALSE": "3", 'BSCS': "4", "BSCSS": "5"}},
+            "Front_M6":     {"train": "Front_M6",        "val": "Front_M6_val",
+                             "categories": {'PADC': "0", 'PAOH': "1", 'PASC': "2", "FALSE": "3", 'PASD': "4", 'SINR': "5", "PASP": "6", "PANS": "7"}},
+            "FrontDark_M6": {"train": "FrontDark_M6", "val": "FrontDark_M6_val",
+                             "categories": {'PADC': "0", 'PAOH': "1", 'PASC': "2", "FALSE": "3", 'PASD': "4", 'SINR': "5", "PASP": "6", "PANS": "7"}},
+            # M24
+            "Back_M24":     {"train": "Back_M24",        "val": "Back_M24_val",
+                             "categories": {'BSDC': "0", 'BSOH': "1", 'SCRATCH': "2", "FALSE": "3"}},
+            "BackDark_M24": {"train": "BackDark_M24",    "val": "BackDark_M24_val",
+                             "categories": {'BSDC': "0", 'BSOH': "1", 'SCRATCH': "2", "FALSE": "3"}},
+            "Front_M24":    {"train": "Front_M24",          "val": "Front_M24_val",
+                             "categories": {'PADC': "0", 'PAOH': "1", 'PASC': "2", "FALSE": "3"}},
+            "FrontDark_M24": {"train": "FrontDark_M24",  "val": "FrontDark_M24_val",
+                              "categories": {'PADC': "0", 'PAOH': "1", 'PASC': "2", "FALSE": "3"}},
+            # jssi-Bumpping
+            "jssi-Bumpping_photo": {"train": "jssi-Bumpping_photo", "val": "jssi-Bumpping_photo_val",
+                                    "categories": {"Bad": "0", "Good": "1"}},
+            "jssi-Bumpping_aoi": {"train": "jssi-Bumpping_aoi", "val": "jssi-Bumpping_aoi_val",
+                                    "categories": {"Bad": "0", "Good": "1"}},
+        }
 
         self.val_ratio = val_ratio
