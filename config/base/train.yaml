@@ -2,7 +2,7 @@
 # 训练哪个模型。设置： 
 #    jssi：aoi、aoi_multi、photo、photo_multi
 #    M6、M24、M47: Front、Back
-train_model: aoi
+train_model: Front
 
 # 训练轮数，建议20，新增模型时适量增大
 epoch: 20
@@ -11,10 +11,10 @@ epoch: 20
 resume_checkpoint: True
 
 # batch_size根据显卡显存设置，通常为8的倍数
-batch_size: 8
+batch_size: 16
 
 # 学习率,设置：batchsize=16时设置为0.0008
-learning_rate: 0.0004
+learning_rate: 0.0008
 
 # 是否上线本次训练后的模型.设置：True或False
 replace_online_model: True

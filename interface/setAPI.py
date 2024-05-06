@@ -41,13 +41,17 @@ def temp_preprocess(img_list, client):
     temp_dict = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
     for img in img_list:
         label = img.split(os.sep)[-2]
-        recipe, lot, BincodeOP, img_name, supplier = img.split("@")[5], img.split("@")[6], img.split("@")[3], img.split("@")[8], img.split("@")[9]
+        recipe, lot, BincodeOP, BincodeAI, img_name, supplier = img.split("@")[5], img.split("@")[6], img.split("@")[3], img.split("@")[4], img.split("@")[8], img.split("@")[9]
         dataset = get_dataset(client, recipe, supplier, img)
         if not dataset:
             os.remove(img)
             continue
         _, extension = os.path.splitext(img)
-        save_img_name = "{}@{}@{}.{}".format(BincodeOP, lot, img_name, extension)
+        BincodeOP = BincodeAI if not BincodeOP else BincodeOP
+        save_img_name = "{}@{}@{}{}".format(BincodeOP, lot, img_name, extension)
+        if client in ["M6", "M24"]:
+            recipe = recipe.split("_")[0]
+            save_img_name = "{}@{}@{}{}".format(label, lot, img_name, extension)
         temp_dict[dataset][recipe][label].append({"img": img, "save_img_name": save_img_name})
 
     return temp_dict
@@ -63,6 +67,15 @@ def copy_imgs(img_list, save_path, num_threads=4):
 
     with ThreadPoolExecutor(max_workers=num_threads) as executor:
         executor.map(copy_img, img_list)
+
+
+def get_val_num(all_num, val_ratio):
+    val_num = 0
+    if 2 <= all_num <= 9:
+        val_num = 1
+    elif all_num >= 10:
+        val_num = int(val_ratio * all_num)
+    return val_num
 
 
 @move_temp_img_api.route("/AddToDataSet", methods=['POST'])
@@ -83,7 +96,7 @@ def move_temp_img():
                     if label not in categories:
                         continue
                     random.shuffle(images)
-                    val_num = int(dataset_cfg.val_ratio * len(images))
+                    val_num = get_val_num(len(images), dataset_cfg.val_ratio)
 
                     copy_imgs(images[:val_num], os.path.join(val_path, recipe, label), num_threads=dataset_cfg.copy_threads)
                     copy_imgs(images[val_num:], os.path.join(train_path, recipe, label), num_threads=dataset_cfg.copy_threads)

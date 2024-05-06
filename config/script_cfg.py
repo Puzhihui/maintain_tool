@@ -74,9 +74,9 @@ class dataset_config():
         self.dataset = {
             # M6
             "Back_M6":      {"train": "Back_M6",         "val": "Back_M6_val",
-                             "categories": {'BSDC': "0", 'BSNS': "1", 'SCRATCH': "2", "FALSE": "3", 'BSCS': "4", "BSCSS": "5"}},
+                             "categories": {'BSDC': "0", 'BSOH': "1", 'SCRATCH': "2", "FALSE": "3", 'BSCS': "4", "BSCSS": "5", "BSPS": "6"}},
             "BackDark_M6":  {"train": "BackDark_M6", "val": "BackDark_M6_val",
-                             "categories": {'BSDC': "0", 'BSNS': "1", 'SCRATCH': "2", "FALSE": "3", 'BSCS': "4", "BSCSS": "5"}},
+                             "categories": {'BSDC': "0", 'BSOH': "1", 'SCRATCH': "2", "FALSE": "3", 'BSCS': "4", "BSCSS": "5", "BSPS": "6"}},
             "Front_M6":     {"train": "Front_M6",        "val": "Front_M6_val",
                              "categories": {'PADC': "0", 'PAOH': "1", 'PASC': "2", "FALSE": "3", 'PASD': "4", 'SINR': "5", "PASP": "6", "PANS": "7"}},
             "FrontDark_M6": {"train": "FrontDark_M6", "val": "FrontDark_M6_val",
